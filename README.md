@@ -2,7 +2,7 @@
 
 Training, evaluation and analysis code of the PhD thesis *Predicting Flood Extent with Artificial Intelligence from Land Surface Characteristics and Daily Hydroclimatic Inputs* (Ravi Kumar, Sapienza University of Rome, 2026).
 
-A residual U-Net and a Vision Transformer (ViT) predict binary flood extent at 80 m from land surface characteristics (T0) and from land surface characteristics with input histories of 3, 7, 15 and 30 days of precipitation and soil moisture (T3 to T30). The networks are trained on the FloodPULSEO dataset. The code that builds the dataset is in [FloodPULSEO-pipeline](https://github.com/ravi-kumar-eo/FloodPULSEO-pipeline).
+A residual U-Net and a Vision Transformer (ViT) predict binary flood extent at 80 m from land surface characteristics (T0) and from land surface characteristics with hydroclimatic input histories of 3, 7, 15 and 30 days of precipitation and soil moisture (T3 to T30). The networks are trained on the FloodPULSEO dataset. The code that builds the dataset is in [FloodPULSEO-pipeline](https://github.com/ravi-kumar-eo/FloodPULSEO-pipeline).
 
 ## Contents
 
