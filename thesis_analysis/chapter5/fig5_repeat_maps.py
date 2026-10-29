@@ -181,7 +181,7 @@ def draw(products, sequence, crop, keys, filename):
     handles = [
         Patch(facecolor=em.COL[key], edgecolor='#777777', linewidth=0.3, label=label)
         for key, label in (
-            ('tp', 'Flood / detected'), ('fn', 'Missed flood'), ('fp', 'False detection'),
+            ('tp', 'Flood / detected'), ('fn', 'Missed detection'), ('fp', 'False detection'),
             ('dry', 'Dry / correct dry'), ('pw', 'Permanent water / mixed'), ('out', 'Outside footprint'),
         )
     ]
