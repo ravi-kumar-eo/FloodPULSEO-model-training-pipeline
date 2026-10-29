@@ -1,0 +1,10 @@
+stage: final_t0
+backbone: unet
+unet_base: 21
+unet_levels: 4
+learning_rate: 0.01
+momentum: 0.99
+poly_power: 0.9
+batch_size: 32
+seed: 3
+temporal_days: 0

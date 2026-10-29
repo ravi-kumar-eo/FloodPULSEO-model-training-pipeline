@@ -1,0 +1,15 @@
+# versions of the thesis runs (run_manifest.json): Python 3.12.13
+tensorflow==2.21.0
+keras==3.15.0
+numpy
+pandas
+pyyaml
+rasterio
+h5py
+scipy
+matplotlib
+geopandas
+shapely
+pyproj
+cartopy
+pillow

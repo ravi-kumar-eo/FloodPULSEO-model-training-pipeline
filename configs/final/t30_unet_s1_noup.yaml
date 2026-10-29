@@ -1,0 +1,25 @@
+stage: final_ablation
+variant: noup               # ablation at T30 (Ravi, 2026-10-07)
+backbone: unet
+unet_base: 21
+unet_levels: 4
+learning_rate: 0.01
+momentum: 0.99
+poly_power: 0.9
+batch_size: 32
+seed: 1
+temporal_days: 30
+weather_mode: upstream         # per-patch daily weather + upstream catchment rain (Ravi, 2026-10-07)
+weather_series: true           # the daily series: one vector per day
+weather_summary: true          # fixed window statistics, added to every day vector
+weather_upstream: false        # upstream rain + catchment size channels
+aoi_day_dim: 256               # width of the day vectors (key name kept from the AOI design)
+temporal_mode: utae            # U-TAE: per-position temporal attention masks
+utae_inject_level: 2           # the days enter at the 8 x 8 level
+utae_condition: film           # FiLM-conditioned residual block on normalised features
+day_context: tcn               # causal dilated temporal convolutions over the day vectors
+utae_heads: 14
+utae_dk: 4
+utae_dmodel: 256
+fine_tune_lr: 1.0e-3           # copied T0 weights: one tenth of the T0 rate; no frozen phase
+new_parts_lr: 1.0e-2           # new weather parts: the T0 rate

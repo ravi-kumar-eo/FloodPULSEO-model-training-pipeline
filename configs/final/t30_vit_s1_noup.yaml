@@ -1,0 +1,25 @@
+stage: final_ablation
+variant: noup               # ablation at T30 (Ravi, 2026-10-07)
+backbone: vit
+d_model: 256
+depth: 8
+num_heads: 8
+atom_dim: 64
+dropout_rate: 0.05
+head_width: 64
+learning_rate: 1.2e-4
+weight_decay: 0.05
+batch_size: 32
+seed: 1
+temporal_days: 30
+weather_mode: upstream         # per-patch daily weather + upstream catchment rain (Ravi, 2026-10-07)
+weather_series: true           # the daily series: one vector per day
+weather_summary: true          # fixed window statistics, added to every day vector
+weather_upstream: false        # upstream rain + catchment size channels
+aoi_day_dim: 256               # width of the day vectors (key name kept from the AOI design)
+w_dim: 256                     # day tokens and day transformer width
+w_depth: 2
+xattn_ffn_mult: 2              # gated feed-forward after the gated cross-attention (Flamingo)
+fine_tune_lr: 1.2e-5           # copied T0 weights: one tenth of the T0 rate; no frozen phase
+new_parts_lr: 1.2e-4           # new weather parts: the T0 rate
+warmup_epochs: 0

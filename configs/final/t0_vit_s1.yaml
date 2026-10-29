@@ -1,0 +1,13 @@
+stage: final_t0
+backbone: vit
+d_model: 256
+depth: 8
+num_heads: 8
+atom_dim: 64
+dropout_rate: 0.05
+head_width: 64
+learning_rate: 1.2e-4
+weight_decay: 0.05
+batch_size: 32
+seed: 1
+temporal_days: 0

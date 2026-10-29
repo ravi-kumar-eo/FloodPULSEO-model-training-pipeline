@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.bak
+runs/
+runs_final/
+metadata/
+*.h5
+*.npz
+*.tif
+.ipynb_checkpoints/

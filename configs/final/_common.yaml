@@ -1,0 +1,32 @@
+# FINAL programme (METHOD_PLAN_RERUN.md v3), shared by all 18 fits. A fit config overrides
+# nothing here; it only adds its family, stage, seed and window.
+patches_dir: /home/ravi/shared_data/global_flood_dataset/pipeline/data/patches/patches_tif
+final_dir: final               # metadata/final/{split, labels_80m_cls, aoi_weather, input_transforms.json}
+mixed_as: pw                   # class 3 (flood + water >= 32/64 but neither alone) -> -1, like permanent water
+soil_file: input_160m.tif      # SoilGrids v2.0
+aoi_k: 11                      # AOI weather window, K x K native cells
+mixed_precision: mixed_bfloat16
+eval_cache: true               # validation decoded once into shared memory
+train_cache_gb: 85             # training rows decoded into shared memory (flood rows first), a cap:
+                               # T0 single-observation set fits whole (41.7 GB); T30/windows: all
+                               # flood rows (27 GB) + 58 GB of dry rows (154,289 of 199,950 rows).
+                               # With the 30.5 GB validation cache /dev/shm must be >= 120 GB
+                               # (Bolzano 126 GB). Bolzano 2026-10-06: 54 vs 167 ms/step from disk.
+cache_workers: 24
+
+flood_ratio: 0.5
+workers: 12
+epochs: 100
+patience: 15                   # counted on stop_metric (Ravi, 2026-10-05: 15 for time)
+stop_metric: val_seg_loss           # EARLY STOPPING on the validation loss (Ravi, 2026-10-06, option C)
+stop_mode: min
+select_metric: val_flood_iou_best   # CHECKPOINT: epoch with the best validation pooled flood-only IoU
+select_mode: max                    # at the best of 49 thresholds (the evaluator's threshold rule)
+min_lr: 1.0e-7
+warmup_epochs: 5               # ViT T0 only; warm-started fits have none
+
+threshold_head: true
+thr_head_width: 64
+lambda_thr: 1.0
+thr_sharpness: 20.0
+thr_dry_weight: 1.0
