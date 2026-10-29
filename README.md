@@ -1,4 +1,4 @@
-# FloodPULSEO-models
+# FloodPULSEO-model-training-pipeline
 
 Training, evaluation and analysis code of the PhD thesis *Predicting Flood Extent with Artificial Intelligence from Land Surface Characteristics and Daily Hydroclimatic Inputs* (Ravi Kumar, Sapienza University of Rome, 2026).
 
