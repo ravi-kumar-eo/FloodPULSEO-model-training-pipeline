@@ -83,49 +83,56 @@ def main():
         rows.append(dict(site=site, name=name, cls=cls, maps=maps, cfg={'unet': bc.LABEL[cu], 'vit': bc.LABEL[cv]}))
         print(site, name, cu, cv, {k: tuple(round(float(x), 3) for x in metrics(cls, v)) for k, v in maps.items()})
 
+    # One page per site (Ravi, 29 Oct 2026: the 15 maps on one page were too small), suffix _1 to _3; the LaTeX
+    # figure number is marked A, B, C on the three pages, each with panels (a) to (e).
     ps.apply_clear()
-    width, ncol, gap = ps.TEXT_WIDTH_IN, 5, 0.07
-    pw = (width - gap * (ncol - 1) - 0.1) / ncol
-    tit_h, lab_h, leg_h = 0.36, 0.30, 0.72
-    heights = [min(pw * r['cls'].shape[0] / r['cls'].shape[1], 1.3 * pw) for r in rows]
-    fig_h = sum(h + tit_h + lab_h for h in heights) + leg_h
-    fig = plt.figure(figsize=(width, fig_h))
-    top = fig_h
-    letters = iter('abcdefghijklmno')
-    for r, h in zip(rows, heights):
-        bottom = top - tit_h - h
-        fig.text(0.05 / width, (top - 0.03) / fig_h, r['name'], ha='left', va='top', fontsize=ps.FONT_SIZE - 1.5)
-        panels = [('label', 'Flood label'), ('gff_utae', 'GFF U-TAE'), ('gff_metnet', 'GFF MaxViT U-Net'),
-                  ('unet', r['cfg']['unet']), ('vit', r['cfg']['vit'])]
+    width, gap, side = ps.TEXT_WIDTH_IN, 0.25, 0.05
+    pw = (width - 2 * side - gap) / 2
+    head_h, tit_h, below_h = 0.30, 0.22, (0.40, 0.27, 0.27)
+    for n, r in enumerate(rows, 1):
+        letters = iter('abcde')
         H, W = r['cls'].shape
-        for col, (k, title) in enumerate(panels):
-            w_ = h * W / H
-            left = 0.05 + col * (pw + gap) + (pw - w_) / 2
-            ax = fig.add_axes([left / width, bottom / fig_h, w_ / width, h / fig_h])
-            ax.imshow(image(r['cls'], None if k == 'label' else r['maps'][k]), interpolation='nearest')
-            ax.set_xticks([])
-            ax.set_yticks([])
-            for sp in ax.spines.values():
-                sp.set_visible(True)
-                sp.set_edgecolor('black')
-                sp.set_linewidth(0.6)
-            lt = next(letters)
-            ax.set_title(f'({lt}) {title}', fontsize=ps.FONT_SIZE - 2.5, pad=3, loc='center')
-            if k == 'label':
-                flood = int((r['cls'] == 1).sum())
-                scored = int(((r['cls'] == 0) | (r['cls'] == 1)).sum())
-                txt = f'Flooded area {flood * 0.0064:,.1f} km²\n{100 * flood / scored:.1f}% of scored cells'
-            else:
-                i, p, q = metrics(r['cls'], r['maps'][k])
-                txt = f'IoU {i:.2f}  POD {p:.2f}\nPOFD {q:.3f}'
-            ax.text(0.5, -0.04, txt, transform=ax.transAxes, ha='center', va='top', fontsize=ps.FONT_SIZE - 3)
-        top = bottom - lab_h
-    h, heads = em.legend_handles()
-    leg = fig.legend(handles=h, loc='lower center', bbox_to_anchor=(0.5, 0.0), ncol=4, frameon=False,
-                     fontsize=ps.FONT_SIZE - 2, handlelength=1.1, handleheight=0.8, columnspacing=1.2)
-    em.bold_heads(leg, heads)
-    with mpl.rc_context({'savefig.bbox': None}):
-        ps.save(fig, __file__, subdir='5_5')
+        h = min(pw * H / W, 1.9)
+        w_ = h * W / H
+        fig_h = head_h + 3 * (tit_h + h) + sum(below_h) + 0.05
+        fig = plt.figure(figsize=(width, fig_h))
+        fig.text(side / width, (fig_h - 0.04) / fig_h, r['name'], ha='left', va='top', fontsize=ps.FONT_SIZE,
+                 weight='bold')
+        grid = [[('label', 'Flood label'), None], [('gff_utae', 'GFF U-TAE'), ('gff_metnet', 'GFF MaxViT U-Net')],
+                [('unet', r['cfg']['unet']), ('vit', r['cfg']['vit'])]]
+        top = fig_h - head_h
+        for row, cells in enumerate(grid):
+            bottom = top - tit_h - h
+            for col, cell in enumerate(cells):
+                x0 = side + col * (pw + gap)
+                if cell is None:
+                    hd, heads = em.legend_handles()
+                    leg = fig.legend(handles=hd, loc='upper left', bbox_to_anchor=(x0 / width, (top - 0.02) / fig_h),
+                                     ncol=1, frameon=False, fontsize=ps.FONT_SIZE, handlelength=1.1,
+                                     handleheight=0.8, labelspacing=0.35, borderaxespad=0)
+                    em.bold_heads(leg, heads)
+                    continue
+                k, title = cell
+                ax = fig.add_axes([(x0 + (pw - w_) / 2) / width, bottom / fig_h, w_ / width, h / fig_h])
+                ax.imshow(image(r['cls'], None if k == 'label' else r['maps'][k]), interpolation='nearest')
+                ax.set_xticks([])
+                ax.set_yticks([])
+                for sp in ax.spines.values():
+                    sp.set_visible(True)
+                    sp.set_edgecolor('black')
+                    sp.set_linewidth(0.6)
+                ax.set_title(f'({next(letters)}) {title}', fontsize=ps.FONT_SIZE, pad=3, loc='center')
+                if k == 'label':
+                    flood = int((r['cls'] == 1).sum())
+                    scored = int(((r['cls'] == 0) | (r['cls'] == 1)).sum())
+                    txt = f'Flooded area {flood * 0.0064:,.1f} km²\n{100 * flood / scored:.1f}% of scored cells'
+                else:
+                    i, p, q = metrics(r['cls'], r['maps'][k])
+                    txt = f'IoU {i:.2f}   POD {p:.2f}   POFD {q:.3f}'
+                ax.text(0.5, -0.03, txt, transform=ax.transAxes, ha='center', va='top', fontsize=ps.FONT_SIZE)
+            top = bottom - below_h[row]
+        with mpl.rc_context({'savefig.bbox': None}):
+            ps.save(fig, __file__, suffix=f'_{n}', subdir='5_5')
 
 
 if __name__ == '__main__':
