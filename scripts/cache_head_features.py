@@ -49,7 +49,7 @@ import numpy as np
 import yaml
 
 import sys as _sys; from pathlib import Path as _P
-_sys.path.insert(0, str(_P(__file__).resolve().parents[2]))   # src/ on the path
+_sys.path.insert(0, str(_P(__file__).resolve().parents[1]))   # src/ on the path
 from flood.paths import SRC, ROOT, METADATA
 sys.path.insert(0, str(SRC))
 

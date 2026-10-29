@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Entry point of the FINAL programme (METHOD_PLAN_RERUN.md v3): one script, both families.
 
-    python train.py unet final_t0     --config ../../configs/final/t0_unet_s1.yaml --runs-dir <runs_final>
-    python train.py vit  final_t30    --config ../../configs/final/t30_vit_s1.yaml --runs-dir <runs_final>
-    python train.py unet final_window --config ../../configs/final/t7_unet_s1.yaml --runs-dir <runs_final>
+    python scripts/train.py unet final_t0     --config configs/t0_unet_s1.yaml --runs-dir <runs_final>
+    python scripts/train.py vit  final_t30    --config configs/t30_vit_s1.yaml --runs-dir <runs_final>
+    python scripts/train.py unet final_window --config configs/t7_unet_s1.yaml --runs-dir <runs_final>
 
 Family and stage are declared on the command line AND in the config; core_final refuses a
 mismatch, a temporal_days outside the stage, or a weather fit without AOI weather / U-TAE.
@@ -12,7 +12,7 @@ nnU-Net poly decay; ViT AdamW with warm-up + linear decay.
 """
 import sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))   # src/ on the path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))   # src/ on the path
 
 import yaml                                                    # noqa: E402
 from tensorflow import keras                                   # noqa: E402

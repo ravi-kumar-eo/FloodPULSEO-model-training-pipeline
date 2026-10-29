@@ -23,8 +23,8 @@ import yaml
 from flood.paths import METADATA                                             # noqa: E402
 from flood.data.dataset_final import FinalFloodPatches, load_transforms        # noqa: E402
 from flood.training.core_final import build_model, data_paths, final_dataset_kwargs  # noqa: E402
-from scripts.final.train import FAMILIES                                       # noqa: E402
-from scripts.final.evaluate import pick_threshold                              # noqa: E402
+from scripts.train import FAMILIES                                       # noqa: E402
+from scripts.evaluate import pick_threshold                              # noqa: E402
 
 
 def main():

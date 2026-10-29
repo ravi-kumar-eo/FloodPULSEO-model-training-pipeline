@@ -3,7 +3,7 @@
 
 For each fit: its config.yaml, its selected checkpoint (run_manifest selection, = best_selected) and
 its stored threshold (inference_final/threshold.json). The model is built and restored exactly as in
-scripts/final/evaluate.py (restore is checked: a dummy forward pass must change), inputs come through
+scripts/evaluate.py (restore is checked: a dummy forward pass must change), inputs come through
 FinalFloodPatches with the fit's own settings (transforms, soil file, weather mode, window).
 
 Writes <out>/<stage>__s<seed>__<family>/: prob.f16.npy (N,32,32), labels.i8.npy (N,32,32, the batch's
@@ -25,8 +25,8 @@ import yaml                                                              # noqa:
 
 from flood.data.dataset_final import FinalFloodPatches, load_transforms  # noqa: E402
 from flood.training.core_final import build_model, weather_shape         # noqa: E402
-from scripts.final.train import FAMILIES                                 # noqa: E402
-from scripts.final.evaluate import predict                               # noqa: E402
+from scripts.train import FAMILIES                                 # noqa: E402
+from scripts.evaluate import predict                               # noqa: E402
 
 ALL = [f"final_{t}/seed{s}/{m}" for t in ("t0", "t30") for s in (1, 2, 3) for m in ("unet", "vit")]
 

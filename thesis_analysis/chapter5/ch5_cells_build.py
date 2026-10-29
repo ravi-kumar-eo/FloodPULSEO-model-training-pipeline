@@ -10,7 +10,7 @@ Rows: the 51,606 test patches in the evaluator's order (runs_final/*/inference_f
 identical for every fit). Cells: the 32 x 32 cells of 80 m of each patch, aligned with test__labels.i8.npy
 (1 flood, 0 dry, -1 permanent water or mixed; scored cells are label >= 0).
 
-Values are the physical values of the files the final loader reads (dataset_final.py, configs/final/_common.yaml):
+Values are the physical values of the files the final loader reads (dataset_final.py, configs/_common.yaml):
   input_10m.tif  bands VV, VH, NDVI, NDBI, PW -> NDVI and NDBI, mean of the valid 10 m pixels of each 80 m cell
                  (valid: finite, not the 9999 sentinel, within [-1, 1])
   input_80m.tif  elevation (m), sin and cos of the flow direction, UDA (km2), HAND (m)

@@ -1,5 +1,5 @@
 """Source data of the perturbation figure of Section 5.3.6 and of its appendix table: response of the six T30
-networks to perturbed dynamic hydroclimatic variables on the test subset (experiments/src/scripts/final/perturb_eval.py
+networks to perturbed dynamic hydroclimatic variables on the test subset (scripts/perturb_eval.py
 on Bolzano; its inference_perturb/ folders copied to experiments/runs_final/final_t30/seed<s>/<family>/inference_perturb/).
 
 Every perturbation is predicted with the fit's validation-selected threshold unchanged and compared with the

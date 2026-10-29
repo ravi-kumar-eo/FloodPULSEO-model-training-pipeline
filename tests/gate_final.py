@@ -38,7 +38,7 @@ def check(ok, msg):
 
 
 def cfg_of(name):
-    d = Path(__file__).resolve().parents[1] / 'configs' / 'final'
+    d = Path(__file__).resolve().parents[1] / 'configs'
     c = yaml.safe_load(open(d / '_common.yaml')); c.update(yaml.safe_load(open(d / name)))
     c['patches_dir'] = resolve_patches_dir(c)
     return c
@@ -112,7 +112,7 @@ def main():
         s.close(); s.unlink()
 
     print(f'G5 identity ({a.family}, float32)')
-    from scripts.final.train import FAMILIES
+    from scripts.train import FAMILIES
     bb = FAMILIES[a.family][0]
     c0 = dict(c0); c30 = dict(c30)
     m0 = build_model(bb, c0)

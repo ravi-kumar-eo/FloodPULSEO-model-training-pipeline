@@ -1,7 +1,7 @@
 """Day attention of the networks with an input history on all 51,606 test patches (Section 5.4.3, 26 Oct 2026).
 
 Source (read only): experiments/runs_final/{final_t30,final_window}/seed*/<fit>/inference_attention_all/attention.npz,
-one forward pass of each fit over every test row (experiments/src/scripts/final/attention_all.py): att (N, T), the
+one forward pass of each fit over every test row (scripts/attention_all.py): att (N, T), the
 weather as the network receives it (N, T, 5: local precipitation / 400, soil moisture, valid, upstream precipitation
 / 400, log10(1 + catchment area km2) / 7), folder_name, patch_number and the labelled flood cells of each patch.
 Weights are expressed relative to a uniform weighting of the days (1 = 1/T per day) and averaged over seeds 1-3.

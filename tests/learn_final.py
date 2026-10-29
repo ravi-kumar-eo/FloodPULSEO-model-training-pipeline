@@ -29,8 +29,8 @@ from flood.data.dataset_final import FinalFloodPatches, load_transforms        #
 from flood.training.core_final import build_model, configure_warm_optimizers, data_paths, resolve_patches_dir, final_dataset_kwargs  # noqa: E402
 from flood.training import phases                                              # noqa: E402
 from flood.losses import segmentation_loss                                     # noqa: E402
-from scripts.final.train import FAMILIES                                       # noqa: E402
-from scripts.final.evaluate import pick_threshold                              # noqa: E402
+from scripts.train import FAMILIES                                       # noqa: E402
+from scripts.evaluate import pick_threshold                              # noqa: E402
 
 
 def main():
@@ -40,11 +40,11 @@ def main():
     ap.add_argument('--steps', type=int, default=400)
     ap.add_argument('--batch', type=int, default=32)
     ap.add_argument('--probe', type=int, default=64)
-    ap.add_argument('--config', default=None, help='default: configs/final/t30_<family>_s1.yaml')
+    ap.add_argument('--config', default=None, help='default: configs/t30_<family>_s1.yaml')
     ap.add_argument('--every', type=int, default=100, help='training steps between probes')
     ap.add_argument('--out', default=None, help='also write the final JSON here')
     a = ap.parse_args()
-    D = Path(__file__).resolve().parents[1] / 'configs' / 'final'
+    D = Path(__file__).resolve().parents[1] / 'configs'
     cfg = yaml.safe_load(open(D / '_common.yaml'))
     cfg.update(yaml.safe_load(open(a.config or D / f't30_{a.family}_s1.yaml')))
     cfg['patches_dir'] = resolve_patches_dir(cfg); cfg['batch_size'] = a.batch

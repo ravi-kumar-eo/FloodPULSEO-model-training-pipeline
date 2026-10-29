@@ -20,7 +20,7 @@ from flood.training.core_final import data_paths, resolve_patches_dir          #
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--budget-gb', type=float, default=0.5)
     a = ap.parse_args()
-    D = Path(__file__).resolve().parents[1] / 'configs' / 'final'
+    D = Path(__file__).resolve().parents[1] / 'configs'
     cfg = yaml.safe_load(open(D / '_common.yaml')); cfg.update(yaml.safe_load(open(D / 't30_unet_s1.yaml')))
     cfg['patches_dir'] = resolve_patches_dir(cfg)
     dp = data_paths(cfg, Path(os.environ.get('FLOOD_METADATA_DIR') or METADATA))

@@ -1,5 +1,5 @@
 """RQ4 — Response of the networks of every input-history length to the precipitation of single days (encoder probes,
-experiments/src/scripts/final/encoder_probe.py; the same 2,000 test patches for every fit; each network receives its
+scripts/encoder_probe.py; the same 2,000 test patches for every fit; each network receives its
 last T days; probe.npz of T30 under final_t30/, of T3, T7 and T15 under final_window/).
 
 For each removed day, the change of the predicted flood cells (prob >= the fit's selected threshold, scored cells) of

@@ -62,7 +62,7 @@ FROZEN_FILES = ['flood/training/core_final.py', 'flood/training/core.py', 'flood
                 'flood/models/temporal/utae.py', 'flood/models/temporal/aoi_weather.py',
                 # 2026-10-08 (review of Ch4): also the entry point (optimisers, schedules), the
                 # evaluator, the swap test, the path module and the builders of the upstream inputs
-                'scripts/final/train.py', 'scripts/final/evaluate.py', 'tests/weather_check.py',
+                'scripts/train.py', 'scripts/evaluate.py', 'tests/weather_check.py',
                 'flood/paths.py', 'build/build_upstream_catchments.py', 'build/build_upstream_weather.py']
 
 
@@ -92,7 +92,7 @@ class FloodIoUBest(keras.metrics.Metric):
     """Pooled flood-only IoU at the best of the 49 thresholds 0.02, 0.04, ..., 0.98.
 
     The SELECTION metric of the final programme (Ravi, 2026-10-05): the same quantity with which
-    scripts/final/evaluate.py chooses each fit's global threshold (pick_threshold), accumulated over
+    scripts/evaluate.py chooses each fit's global threshold (pick_threshold), accumulated over
     the whole validation pass. TP/FP/FN are summed over every flood-only cell (label >= 0;
     permanent-water and mixed cells, label -1, excluded) for each threshold, and the result is
     max_t TP/(TP+FP+FN). Counts are float64, exact up to 2^53 cells. Re-choosing the threshold every

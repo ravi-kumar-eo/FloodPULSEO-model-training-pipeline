@@ -8,7 +8,7 @@ evaluator's rule (prob >= threshold). Writes chapters/chapter5/plot/data/rq1/:
   hist.npz         per fit, counts of flood and dry cells in 1,000 probability bins of width 0.001 (PR curves and
                    calibration); bin k holds 0.001 k <= p < 0.001 (k + 1), the last bin includes p = 1
   products.csv     one row per flood-positive product and fit: precision, recall, IoU, AUPRC (from the run's
-                   plots/per_product_test.csv, written and checked by experiments/src/scripts/final/plot_run.py)
+                   plots/per_product_test.csv, written and checked by scripts/plot_run.py)
   agreement.csv    per seed, cells counted by what the two families predict on them: flood cells found by both, by
                    one family only, by neither; dry cells flagged by both or one family
 Checks: TP/FP/FN at the threshold from the probabilities and from the histogram equal metrics.csv; per-product means

@@ -3,7 +3,7 @@
 
     python perturb_eval.py --run-dir <runs_final>/final_t30/seed1/unet [--batch 64] [--workers 24]
 
-Loads the fit exactly as scripts/final/evaluate.py does (same checkpoint, data version and split checks) and predicts
+Loads the fit exactly as scripts/evaluate.py does (same checkpoint, data version and split checks) and predicts
 the TEST rows (full row set) once per perturbation of the in-memory daily inputs (FinalFloodPatches._wx, shape
 (N, 30, 5): local precipitation / precip_div, local soil moisture, validity, upstream precipitation / precip_div,
 log10(1 + catchment area) / uda_div). Only the inputs change; the fit's validation-selected global threshold
@@ -31,7 +31,7 @@ import argparse, csv, json, os, sys, time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import numpy as np
 import tensorflow as tf
 import yaml

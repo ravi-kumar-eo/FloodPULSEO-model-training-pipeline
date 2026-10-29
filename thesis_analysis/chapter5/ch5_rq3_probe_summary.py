@@ -1,5 +1,5 @@
 """Summary of the encoder probes of the T30 networks (exploratory, Section 5.4.3): one row per fit with a probe.npz
-(experiments/src/scripts/final/encoder_probe.py, copied from Bolzano to
+(scripts/encoder_probe.py, copied from Bolzano to
 experiments/runs_final/final_t30/seed<s>/<family>/inference_probe/ and, for T3, T7 and T15 (Section 5.4),
 experiments/runs_final/final_window/seed<s>/<family>_t<T>/inference_probe/). Each probe holds 2,000 test patches drawn
 with seed 0, the same patches for every fit; the antecedent descriptors (catchment area, API, soil moisture) are taken

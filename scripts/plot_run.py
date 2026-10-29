@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Five figures per final run (runs_final), the set that scripts/plot_run.py made for the old runs.
 
-    python scripts/final/plot_run.py <run_dir> [<run_dir> ...]
-    python scripts/final/plot_run.py --all          # every finished fit under runs_final
+    python scripts/plot_run.py <run_dir> [<run_dir> ...]
+    python scripts/plot_run.py --all          # every finished fit under runs_final
 
 Reads saved outputs only: training_log.csv, run_manifest.json and inference_final/ (metrics.csv, threshold.json,
 patches.csv, preds/test__prob|labels|tau|index). Writes <run>/plots/:
@@ -38,7 +38,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt                                     # noqa: E402
 from matplotlib.ticker import MaxNLocator                          # noqa: E402
 
-RUNS = Path(__file__).resolve().parents[3] / 'runs_final'
+RUNS = Path(__file__).resolve().parents[2] / 'runs_final'
 plt.rcParams.update({'figure.dpi': 150, 'savefig.dpi': 200, 'font.size': 10, 'axes.grid': True, 'grid.alpha': 0.3})
 # seaborn 'colorblind' (Wong 2011), as in scripts/plot_run.py
 CB = {'blue': '#0173B2', 'orange': '#DE8F05', 'vermillion': '#D55E00'}

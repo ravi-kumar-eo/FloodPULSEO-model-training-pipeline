@@ -36,7 +36,7 @@ REGIME_LABEL = {'seen': 'basin-seen', 'unseen': 'basin-unseen'}
 
 
 def run_dir(family: str, window: str = 't0', seed: int = 1, variant: str | None = None) -> Path:
-    """Run directory of a fit, as scripts/final/train.py names it."""
+    """Run directory of a fit, as scripts/train.py names it."""
     if window == 't0':
         d = RUNS / f'final_t0/seed{seed}/{family}'
     elif window == 't30' and variant is None:

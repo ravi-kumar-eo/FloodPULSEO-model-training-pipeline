@@ -49,7 +49,7 @@ from pathlib import Path
 import numpy as np
 
 import sys as _sys; from pathlib import Path as _P
-_sys.path.insert(0, str(_P(__file__).resolve().parents[2]))   # src/ on the path
+_sys.path.insert(0, str(_P(__file__).resolve().parents[1]))   # src/ on the path
 from flood.paths import SRC, ROOT
 sys.path.insert(0, str(SRC))
 os.environ.setdefault('TF_CPP_MIN_LOG_LEVEL', '2')

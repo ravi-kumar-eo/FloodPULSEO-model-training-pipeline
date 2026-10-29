@@ -2,7 +2,7 @@
 """Check the SELECTION metric: FloodIoUBest inside Keras evaluate == the evaluator's pick_threshold.
 
 Loads real validation rows once into arrays, then (1) model.evaluate on them gives val
-flood_iou_best, (2) a plain forward pass on the same arrays + scripts/final/evaluate.pick_threshold
+flood_iou_best, (2) a plain forward pass on the same arrays + scripts/evaluate.pick_threshold
 gives the evaluator's best pooled flood-only IoU. The two must agree (the evaluator rounds stored
 probabilities to float16, so agreement is to ~1e-4, not bit-exact).
 
@@ -21,8 +21,8 @@ import yaml
 from flood.paths import METADATA                                             # noqa: E402
 from flood.data.dataset_final import FinalFloodPatches, load_transforms        # noqa: E402
 from flood.training.core_final import build_model, data_paths, resolve_patches_dir  # noqa: E402
-from scripts.final.train import FAMILIES                                       # noqa: E402
-from scripts.final.evaluate import pick_threshold                              # noqa: E402
+from scripts.train import FAMILIES                                       # noqa: E402
+from scripts.evaluate import pick_threshold                              # noqa: E402
 
 
 def main():
@@ -30,7 +30,7 @@ def main():
     ap.add_argument('--family', required=True); ap.add_argument('--weights', required=True)
     ap.add_argument('--rows', type=int, default=1024)
     a = ap.parse_args()
-    D = Path(__file__).resolve().parents[1] / 'configs' / 'final'
+    D = Path(__file__).resolve().parents[1] / 'configs'
     cfg = yaml.safe_load(open(D / '_common.yaml')); cfg.update(yaml.safe_load(open(D / f't0_{a.family}_s1.yaml')))
     cfg['patches_dir'] = resolve_patches_dir(cfg)
     tf.keras.mixed_precision.set_global_policy(cfg['mixed_precision'])

@@ -3,7 +3,7 @@
 
     python encoder_probe.py --run-dir <runs_final>/final_t30/seed1/vit [--n 2000] [--batch 64]
 
-Loads the fit exactly as scripts/final/evaluate.py does and runs a fixed random sample of test rows (seed 0) through
+Loads the fit exactly as scripts/evaluate.py does and runs a fixed random sample of test rows (seed 0) through
 the network with recording hooks on its own layers (nothing in the network changes):
   A  representation change: the hydroclimatic output of the network (ViT: output of the gated cross-attention block,
      the tokens the head reads; U-Net: the bottleneck after the temporal collapse) with the true daily inputs and with
@@ -24,7 +24,7 @@ import argparse, json, os, sys, time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import numpy as np
 import tensorflow as tf
 import yaml

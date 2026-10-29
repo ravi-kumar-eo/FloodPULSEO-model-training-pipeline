@@ -3,7 +3,7 @@
 
 Per fit (folders written by predict_ours.py under --ref and --new):
   stored     max |p| difference between --ref and the fit's stored test predictions (same rows):
-             0 means predict_ours.py reproduces scripts/final/evaluate.py exactly
+             0 means predict_ours.py reproduces scripts/evaluate.py exactly
   agreement  correlation of the probabilities and share of scored cells with the same yes/no at the
              fit's stored threshold, rebuilt vs released
   IoU        pooled flood-only IoU (label 1 vs 0; PW and mixed, label -1, excluded) on each set,

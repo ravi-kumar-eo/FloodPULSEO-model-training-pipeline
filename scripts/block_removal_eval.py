@@ -5,7 +5,7 @@ test set instead of 2,000 patches).
 
     python block_removal_eval.py --run-dir <runs_final>/final_window/seed1/vit_t7 [--batch 64] [--workers 24]
 
-Loads the fit exactly as scripts/final/perturb_eval.py does (same checkpoint, data version and split checks) and predicts
+Loads the fit exactly as scripts/perturb_eval.py does (same checkpoint, data version and split checks) and predicts
 the TEST rows (full row set) once per block of days that the fit uses, with the local and upstream precipitation of all
 days of the block set to zero (channels 0 and 3 of FinalFloodPatches._wx; the summary statistics are computed inside
 the network from the daily inputs, so they follow). The fit's validation-selected global threshold is applied unchanged.
@@ -26,7 +26,7 @@ import argparse, csv, json, os, sys, time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import numpy as np
 import tensorflow as tf
 import yaml

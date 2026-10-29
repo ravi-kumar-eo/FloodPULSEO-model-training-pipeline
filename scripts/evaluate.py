@@ -31,7 +31,7 @@ import argparse, csv, hashlib, json, os, sys, time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import numpy as np
 import tensorflow as tf
 import yaml
@@ -39,7 +39,7 @@ import yaml
 from flood.paths import METADATA                                       # noqa: E402
 from flood.data.dataset_final import FinalFloodPatches, load_transforms  # noqa: E402
 from flood.training.core_final import build_model, data_paths, md5, STAGES, weather_shape, final_dataset_kwargs  # noqa: E402
-from scripts.final.train import FAMILIES                               # noqa: E402
+from scripts.train import FAMILIES                               # noqa: E402
 
 GRID = np.round(np.linspace(0.02, 0.98, 49), 4)
 META = ['folder_name', 'patch_number', 'exp1_keep', 'aoi', 'ground_unit', 'basin_regime',
