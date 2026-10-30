@@ -4,7 +4,8 @@
 S3=s3://flood-patches-use1/experiments/runs_baselines/gff
 D=/media/ravi/Jupyter/flood_vit/experiments/runs_baselines/gff
 export AWS_PAGER=""
-home() { nmcli -t -f NAME connection show --active | grep -q "FRITZ!Box"; }
+HOME_WIFI=${HOME_WIFI:-}             # name of the network to download on; empty = any network
+home() { nmcli -t -f NAME connection show --active | grep -q "$HOME_WIFI"; }
 until aws s3 ls $S3/BACKUP_DONE > /dev/null 2>&1; do sleep 300; done
 for p in results logs site_preds gate2_preds code gff_preds batches; do
   until home; do sleep 300; done

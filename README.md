@@ -51,7 +51,7 @@ Each run folder stores its configuration, a copy of the code it ran (`code/`, `c
 
 ## Citation
 
-Kumar, R. (2026). *Predicting Flood Extent with Artificial Intelligence from Land Surface Characteristics and Daily Hydroclimatic Inputs*. PhD thesis, Sapienza University of Rome.
+Kumar, R. (2026). *Global Flood Extent Prediction from Earth Observation Data Using Deep Learning*. PhD thesis, Sapienza University of Rome.
 
 ## License
 

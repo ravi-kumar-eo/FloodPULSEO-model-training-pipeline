@@ -3,8 +3,8 @@ U-Net-T15 and ViT-T15 at the 21 expert-labelled sites.
 
 One bar per pair of a model of this thesis and a GFF model, all scored cells of the 21 sites pooled. T15 is the
 input-history length of the models of this thesis in Section 5.5 (Ravi, 27 Oct 2026).
-(a) Labelled flood cells: detected by both, by the model of this thesis only, by the GFF model only, and by neither.
-(b) False detections (labelled dry cells predicted as flood): raised by both, by the model of this thesis only and by
+(a) Labelled flood cells: detected by both, by the U-Net or ViT only, by the GFF model only, and by neither.
+(b) False detections (labelled dry cells predicted as flood): raised by both, by the U-Net or ViT only and by
 the GFF model only, as shares of the false detections of either. Ours: each seed at its validation-selected threshold,
 shares averaged over seeds 1-3. Data: data/baseline/agreement.csv (ch5_baseline_cells_data.py).
 
@@ -19,9 +19,9 @@ import rq1_common as rc
 from rq1_common import ps
 
 PAIRS = [('unet_t15', 'gff_utae'), ('unet_t15', 'gff_maxvit'), ('vit_t15', 'gff_utae'), ('vit_t15', 'gff_maxvit')]
-FLOOD = [('both', 'Detected by both', '#0257CE'), ('ours_only', 'Model of this thesis only', '#56B4E9'),
+FLOOD = [('both', 'Detected by both', '#0257CE'), ('ours_only', 'U-Net or ViT only', '#56B4E9'),
          ('gff_only', 'GFF model only', '#8C8C8C'), ('neither', 'Detected by neither', '#C1408F')]
-FALSE = [('fa_both', 'Raised by both', '#EE8A00'), ('fa_ours_only', 'Model of this thesis only', '#F2B866'),
+FALSE = [('fa_both', 'Raised by both', '#EE8A00'), ('fa_ours_only', 'U-Net or ViT only', '#F2B866'),
          ('fa_gff_only', 'GFF model only', '#8C8C8C')]
 
 

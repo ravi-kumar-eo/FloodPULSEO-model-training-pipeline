@@ -18,8 +18,9 @@ BASE = Path(__file__).resolve().parents[1]
 RAIN = (pd.read_csv(BASE / 'data/repeat/product_inputs.csv')
         .drop_duplicates('folder_name').set_index('folder_name').precip_up_7.to_dict())
 FIGURES = (
-    ('EMSR848_AOI01', [None, ('unet', 't0'), ('unet', 't7'), ('unet', 't30'),
-                       ('vit', 't0'), ('vit', 't7'), ('vit', 't30')],
+    # T0 and T30 only (Ravi, 30 Oct 2026: the seven rows of the appendix figure were too small to read)
+    ('EMSR848_AOI01', [None, ('unet', 't0'), ('unet', 't30'),
+                       ('vit', 't0'), ('vit', 't30')],
      'fig5_35_repeat_quang_ngai'),
     ('EMSR766_AOI01', [None, ('unet', 't0'), ('unet', 't30'),
                        ('vit', 't0'), ('vit', 't30')],
@@ -100,8 +101,8 @@ def load_sequence(group, labels, packed, keys):
                 false_positive = int((prediction & (yy == 0)).sum())
                 false_negative = flooded - true_positive
                 iou = ratio(true_positive, true_positive + false_positive + false_negative)
-                share = 100 * (true_positive + false_positive) / scored
-                annotation = f'Predicted {share:.1f}%, IoU {iou:.2f}'
+                area, share = em.area_share(true_positive + false_positive, scored)
+                annotation = f'Predicted {area} km², {share}%\nIoU {iou:.2f}'
             maps[key] = mosaic, annotation
 
         extent = (origin_x, origin_x + width * 80, origin_y - height * 80, origin_y)
@@ -129,7 +130,7 @@ def draw(products, sequence, crop, keys, filename):
     if rotated:
         xmin, xmax, ymin, ymax = ymin, ymax, -xmax, -xmin
     map_height = map_width * (ymax - ymin) / (xmax - xmin)
-    header_height, annotation_height, legend_height = 0.62, 0.22, 0.48
+    header_height, annotation_height, legend_height = 0.62, 0.36, 0.48
     row_height = map_height + annotation_height
     height = header_height + len(keys) * row_height + legend_height
     fig = plt.figure(figsize=(width, height))

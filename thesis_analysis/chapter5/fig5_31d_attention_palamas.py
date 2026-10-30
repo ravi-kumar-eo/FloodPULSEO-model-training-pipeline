@@ -104,8 +104,8 @@ def main():
         rc.panel_title(ax, f'({"bc"[r]}) {rc.LABEL[arch]}-T{T}')
         for s in ax.spines.values():
             s.set_visible(False)
-    fig.legend(handles=[Patch(facecolor='white', edgecolor='#333333', lw=0.7, label='Input history of the map'),
-                        Patch(label='Outside the input history', **HATCH),
+    fig.legend(handles=[Patch(facecolor='white', edgecolor='#333333', lw=0.7, label='Hydroclimatic input history of the map'),
+                        Patch(label='Outside the hydroclimatic input history', **HATCH),
                         Line2D([], [], color='black', marker='|', ls='none', ms=7, mew=1.4, label='Mapping date')],
                loc='lower left', bbox_to_anchor=(0.01, 0.0), frameon=False, fontsize=ps.FONT_SIZE - 2,
                handlelength=1.6)

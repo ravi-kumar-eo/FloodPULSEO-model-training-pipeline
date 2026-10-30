@@ -53,7 +53,7 @@ def main():
     ax.set_ylim(0, 55)
     rc.ygrid(ax)
     ax.set_ylabel('Flood patches (%)')
-    ax.set_xlabel('Input-history length')
+    ax.set_xlabel('Length of the hydroclimatic input history')
     h = [Patch(facecolor=ps.alpha_on_white(rc.COLOR[f], ps.FILL_ALPHA), edgecolor=rc.COLOR[f], lw=0.6,
                label=f'{rc.LABEL[f]}, mean of three seeds') for f in rc.FAMILIES]
     h.append(Line2D([], [], color='black', lw=1.4, label='Control (precipitation of another event)'))

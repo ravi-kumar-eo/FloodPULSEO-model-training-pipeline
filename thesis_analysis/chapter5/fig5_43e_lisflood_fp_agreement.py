@@ -25,9 +25,9 @@ D = bc.D.parent / 'lisflood_fp'
 GROUPS = [('above', 'Footprint above both'), ('between', 'Footprint between the two'), ('below', 'Footprint below both'),
           ('dry', 'Footprint dry')]
 MODELS = ('unet_t15', 'vit_t15')
-FLOOD = [('both', 'Detected by both', '#0257CE'), ('ours_only', 'Model of this thesis only', '#56B4E9'),
+FLOOD = [('both', 'Detected by both', '#0257CE'), ('ours_only', 'U-Net or ViT only', '#56B4E9'),
          ('lf_only', 'LISFLOOD-FP only', '#8C8C8C'), ('neither', 'Detected by neither', '#C1408F')]
-FALSE = [('fa_both', 'Raised by both', '#EE8A00'), ('fa_ours_only', 'Model of this thesis only', '#F2B866'),
+FALSE = [('fa_both', 'Raised by both', '#EE8A00'), ('fa_ours_only', 'U-Net or ViT only', '#F2B866'),
          ('fa_lf_only', 'LISFLOOD-FP only', '#8C8C8C')]
 
 

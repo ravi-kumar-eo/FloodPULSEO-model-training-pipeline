@@ -34,7 +34,7 @@ def main():
     fp = np.where(flood > 0)[0]
     ctrl = ac.control(fp, act)
     ps.apply_clear()
-    fig, axes = plt.subplots(1, 3, figsize=(ps.TEXT_WIDTH_IN, 2.9))
+    fig, axes = plt.subplots(3, 1, figsize=(ps.TEXT_WIDTH_IN, 6.4))   # stacked (Ravi, 29 Oct 2026): full width per panel
     for ax, T, lab in zip(axes, (30, 15, 7), 'abc'):
         P = ac.upstream(T)
         m = P[fp].max(1) >= ac.RAIN_DAY
@@ -54,16 +54,16 @@ def main():
         rc.ygrid(ax)
         lo, hi = ax.get_ylim()
         ax.set_ylim(lo, hi + 0.18 * (hi - lo))
-        ax.text(0.03, 0.97, f'{int(m.sum()):,} flood patches', transform=ax.transAxes, ha='left', va='top',
+        ax.text(0.99, 0.97, f'{int(m.sum()):,} flood patches', transform=ax.transAxes, ha='right', va='top',
                 fontsize=ps.FONT_SIZE - 2)
         rc.panel_title(ax, f'({lab}) T{T}')
-    axes[0].set_ylabel('Attention relative\nto uniform')
-    fig.supxlabel('3-day period, counted from the wettest 3 days of upstream precipitation (0)', fontsize=ps.FONT_SIZE)
+        ax.set_ylabel('Attention relative to uniform')
+    axes[-1].set_xlabel('3-day period, counted from the wettest 3 days of upstream precipitation (0)')
     h = [Line2D([], [], color=rc.COLOR[f], lw=1.6, label=f'{rc.LABEL[f]}, mean of three seeds') for f in rc.FAMILIES]
     h.append(Line2D([], [], color='#777777', lw=1.1, ls=':', label='Control (precipitation of another event)'))
     fig.legend(handles=h, loc='upper center', ncol=3, frameon=False, bbox_to_anchor=(0.5, 1.0),
                fontsize=ps.FONT_SIZE - 1.5)
-    fig.tight_layout(rect=(0, 0, 1, 0.88), w_pad=1.2)
+    fig.tight_layout(rect=(0, 0, 1, 0.955), h_pad=1.4)
     with mpl.rc_context({'savefig.bbox': None}):
         ps.save(fig, __file__, subdir='5_4')
 

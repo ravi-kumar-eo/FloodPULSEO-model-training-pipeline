@@ -1,5 +1,5 @@
 """Flood maps of three test mapping products: flood label, the LISFLOOD-FP event footprint of the EFAS chain,
-U-Net-T15 and ViT-T15 (majority of seeds 1-3), on the scored 80 m cells (Section 5.5.2).
+U-Net-T15 and ViT-T15 (majority of seeds 1-3), on the evaluated 80 m cells (Section 5.5.2).
 
 Mapping products by rule among the 21 of Table 5.7 (plot/data/lisflood_fp/products.csv): the one where the footprint
 exceeds the better of U-Net-T15 and ViT-T15 most (Palamas); of those where a model of this thesis exceeds the footprint
@@ -101,6 +101,7 @@ def main():
         ci = ((g.bounds_minx - x0) / 80).round().astype(int).to_numpy()
         ri = ((y1 - g.bounds_maxy) / 80).round().astype(int).to_numpy()
         code, d = em.product_title(prod)
+        code = code.replace(r.place.replace('-', ' '), r.place) if r.place else code   # Moorsele Wevelgem -> hyphen
         if r.place and r.place not in code:
             code = code.replace(r.aoi, f'{r.aoi} {r.place}')
         titles = {'lf': 'LISFLOOD-FP', 'unet': 'U-Net-T15', 'vit': 'ViT-T15'}
@@ -111,7 +112,7 @@ def main():
     ps.apply_clear()
     width, ncol, gap = ps.TEXT_WIDTH_IN, 4, 0.08
     pw = (width - gap * (ncol - 1) - 0.1) / ncol
-    tit_h, lab_h, leg_h = 0.38, 0.30, 0.72
+    tit_h, lab_h, leg_h = 0.38, 0.42, 0.72
     heights = [min(pw * r['H'] / r['W'], 1.0 * pw) for r in rows]       # tall AOIs get narrower panels
     fig_h = sum(h + tit_h + lab_h for h in heights) + leg_h
     fig = plt.figure(figsize=(width, fig_h))
@@ -130,12 +131,14 @@ def main():
             for sp in ax.spines.values():
                 sp.set_visible(True); sp.set_edgecolor('black'); sp.set_linewidth(0.6)
             ax.set_title(f'({next(letters)}) {title}', fontsize=ps.FONT_SIZE - 2, pad=3, loc='center')
+            lab = r['lab']; ev = (lab == 0) | (lab == 1)                # evaluated cells: labelled flood or dry
             if k is None:
-                lab = r['lab']; flood = int((lab == 1).sum()); sc = int(((lab == 0) | (lab == 1)).sum())
-                txt = f'Flooded area {flood * 0.0064:,.1f} km²\n{100 * flood / sc:.1f}% of scored cells'
+                a, s = em.area_share(int((lab == 1).sum()), int(ev.sum()))
+                txt = f'Flooded area {a} km²\n{s}% of the mapped area'
             else:
                 i, pod, pofd = metrics(r['lab'], r['maps'][k])
-                txt = f'IoU {i:.2f}   POD {pod:.2f}\nPOFD {pofd:.3f}'
+                txt = em.predicted_text(int((r['maps'][k] & ev).sum()), int(ev.sum())) + \
+                    f'\nIoU {i:.2f}   POD {pod:.2f}\nPOFD {pofd:.3f}'
             ax.text(0.5, -0.04, txt, transform=ax.transAxes, ha='center', va='top', fontsize=ps.FONT_SIZE - 2.5)
         top = bottom - lab_h
     h, heads = em.legend_handles()

@@ -17,9 +17,13 @@ D = Path(__file__).resolve().parents[1] / 'data' / 'repeat'
 SERIES_NAME = 'fig5_32_repeat_cases'
 COUNTS_NAME = 'fig5_37_repeat_aoi_counts'
 LENGTHS = ('t0', 't3', 't7', 't15', 't30')
-SHOW_CONFIGS = ('t0', 't7', 't30')
-LINE_STYLE = {'t0': (0, (4, 2.5)), 't7': ':', 't30': '-'}
-MARKER = {'t0': 's', 't7': '^', 't30': 'D'}
+# All five lengths (Ravi, 29 Oct 2026: T3 and T15 were missing, and at Osijek they are the extremes). Each length has
+# its own hue, marker and line style, and a small sideways offset so that equal values stay separate markers.
+SHOW_CONFIGS = LENGTHS
+CONFIG_COLOR = {'t0': '#8C8C8C', 't3': '#1B9E77', 't7': '#5E3C99', 't15': '#A6761D', 't30': '#B2182B'}
+LINE_STYLE = {'t0': (0, (4, 2)), 't3': '-', 't7': '-', 't15': '-', 't30': '-'}
+MARKER = {'t0': 's', 't3': 'v', 't7': '^', 't15': 'P', 't30': 'D'}
+DODGE = {'t0': -0.12, 't3': -0.06, 't7': 0.0, 't15': 0.06, 't30': 0.12}
 PATCH_SOURCE = {'EMSR848_AOI03'}
 CASES = (
     ('EMSR848_AOI03', 'Da Nang'),
@@ -84,14 +88,14 @@ def series_panel(ax, data, family, title):
             marker='o', ms=4.0, label='Flood label', zorder=5)
     for config in SHOW_CONFIGS:
         values = prediction.loc[(family, config)].reindex(dates).to_numpy()
-        ax.plot(x, values, color=rc.COLOR[family], lw=1.45, ls=LINE_STYLE[config],
-                marker=MARKER[config], ms=3.5, zorder=4)
+        ax.plot(x + DODGE[config], values, color=CONFIG_COLOR[config], lw=1.3, ls=LINE_STYLE[config],
+                marker=MARKER[config], ms=4.8, mec='white', mew=0.5, zorder=4)
     tick_labels = [
         f"{pd.Timestamp(str(date)).strftime('%-d %b')}\n{rain.loc[date]:.0f} mm"
         for date in dates
     ]
     ax.set_xticks(x, tick_labels)
-    ax.set_xlim(-0.25, len(dates) - 0.75)
+    ax.set_xlim(-0.3, len(dates) - 0.7)
     ax.set_ylim(bottom=0)
     ax.set_title(title, loc='left', pad=5)
     ps.ygrid(ax)
@@ -108,7 +112,7 @@ def save_full_width(fig, name):
 
 def series_figure():
     data = {aoi: case_data(aoi) for aoi, _ in CASES}
-    fig, axes = plt.subplots(3, 2, figsize=(ps.TEXT_WIDTH_IN, 7.15), squeeze=False)
+    fig, axes = plt.subplots(3, 2, figsize=(ps.TEXT_WIDTH_IN, 6.6), squeeze=False)
     letters = iter('abcdef')
     for row, (aoi, place) in enumerate(CASES):
         tops = []
@@ -118,16 +122,16 @@ def series_figure():
         row_top = max(tops) * 1.10
         for col in range(2):
             axes[row, col].set_ylim(0, row_top)
-        axes[row, 0].set_ylabel('Flooded share of\nscored cells (%)')
+        axes[row, 0].set_ylabel('Flooded share of the\nmapped area (%)')
 
     handles = [Line2D([], [], color='black', lw=1.6, marker='o', ms=4, label='Flood label')]
     handles.extend(
-        Line2D([], [], color='#666666', lw=1.45, ls=LINE_STYLE[config],
-               marker=MARKER[config], ms=3.5, label=config.upper())
+        Line2D([], [], color=CONFIG_COLOR[config], lw=1.3, ls=LINE_STYLE[config],
+               marker=MARKER[config], ms=4.8, mec='white', mew=0.5, label=config.upper())
         for config in SHOW_CONFIGS
     )
-    fig.subplots_adjust(left=0.12, right=0.985, top=0.965, bottom=0.105, hspace=0.48, wspace=0.28)
-    fig.legend(handles=handles, loc='lower center', bbox_to_anchor=(0.5, 0.014), ncol=4,
+    fig.subplots_adjust(left=0.12, right=0.985, top=0.962, bottom=0.115, hspace=0.55, wspace=0.28)
+    fig.legend(handles=handles, loc='lower center', bbox_to_anchor=(0.5, 0.014), ncol=6,
                columnspacing=1.6, handlelength=2.0)
     return save_full_width(fig, SERIES_NAME)
 
@@ -140,15 +144,15 @@ def dax_figure():
             for col, family in enumerate(rc.FAMILIES)]
     for col in range(2):
         axes[0, col].set_ylim(0, max(tops) * 1.10)
-    axes[0, 0].set_ylabel('Flooded share of\nscored cells (%)')
+    axes[0, 0].set_ylabel('Flooded share of the\nmapped area (%)')
     handles = [Line2D([], [], color='black', lw=1.6, marker='o', ms=4, label='Flood label')]
     handles.extend(
-        Line2D([], [], color='#666666', lw=1.45, ls=LINE_STYLE[config],
-               marker=MARKER[config], ms=3.5, label=config.upper())
+        Line2D([], [], color=CONFIG_COLOR[config], lw=1.3, ls=LINE_STYLE[config],
+               marker=MARKER[config], ms=4.8, mec='white', mew=0.5, label=config.upper())
         for config in SHOW_CONFIGS
     )
     fig.subplots_adjust(left=0.12, right=0.985, top=0.90, bottom=0.30, wspace=0.28)
-    fig.legend(handles=handles, loc='lower center', bbox_to_anchor=(0.5, 0.01), ncol=4,
+    fig.legend(handles=handles, loc='lower center', bbox_to_anchor=(0.5, 0.01), ncol=6,
                columnspacing=1.6, handlelength=2.0)
     with mpl.rc_context({'savefig.bbox': None}):
         return ps.save(fig, Path(__file__).with_name('figA_46_repeat_case_dax_series.py'), subdir='appendix')

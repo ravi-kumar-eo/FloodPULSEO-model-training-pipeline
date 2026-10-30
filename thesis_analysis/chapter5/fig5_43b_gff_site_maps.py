@@ -8,7 +8,7 @@ of this thesis in Section 5.5 (Ravi, 27 Oct 2026). Each is drawn as the majority
 validation-selected thresholds, and the evaluation metrics under each map are those of the drawn map. Sites are named by
 country, date and their number within the flood event (no dataset identifiers). Source (read only):
 experiments/runs_baselines/gff/paired_maps_all/<site>.npz (80 m cells scored in Section 5.5: cls 1 flood, 0 dry,
-2 permanent water or mixed, -1 not scored).
+2 permanent water or mixed, -1 not evaluated).
 """
 import json
 from pathlib import Path
@@ -88,7 +88,7 @@ def main():
     ps.apply_clear()
     width, gap, side = ps.TEXT_WIDTH_IN, 0.25, 0.05
     pw = (width - 2 * side - gap) / 2
-    head_h, tit_h, below_h = 0.30, 0.22, (0.40, 0.27, 0.27)
+    head_h, tit_h, below_h = 0.30, 0.22, (0.40, 0.40, 0.40)
     for n, r in enumerate(rows, 1):
         letters = iter('abcde')
         H, W = r['cls'].shape
@@ -122,13 +122,14 @@ def main():
                     sp.set_edgecolor('black')
                     sp.set_linewidth(0.6)
                 ax.set_title(f'({next(letters)}) {title}', fontsize=ps.FONT_SIZE, pad=3, loc='center')
+                ev = (r['cls'] == 0) | (r['cls'] == 1)                 # evaluated cells: labelled flood or dry
                 if k == 'label':
-                    flood = int((r['cls'] == 1).sum())
-                    scored = int(((r['cls'] == 0) | (r['cls'] == 1)).sum())
-                    txt = f'Flooded area {flood * 0.0064:,.1f} km²\n{100 * flood / scored:.1f}% of scored cells'
+                    a, s = em.area_share(int((r['cls'] == 1).sum()), int(ev.sum()))
+                    txt = f'Flooded area {a} km²\n{s}% of the mapped area'
                 else:
                     i, p, q = metrics(r['cls'], r['maps'][k])
-                    txt = f'IoU {i:.2f}   POD {p:.2f}   POFD {q:.3f}'
+                    txt = em.predicted_text(int((r['maps'][k] & ev).sum()), int(ev.sum())) + \
+                        f'\nIoU {i:.2f}   POD {p:.2f}   POFD {q:.3f}'
                 ax.text(0.5, -0.03, txt, transform=ax.transAxes, ha='center', va='top', fontsize=ps.FONT_SIZE)
             top = bottom - below_h[row]
         with mpl.rc_context({'savefig.bbox': None}):

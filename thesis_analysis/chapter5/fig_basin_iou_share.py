@@ -27,7 +27,7 @@ for a, mk in (('unet_t0', 'o'), ('vit_t0', 's')):
                label=f'{"U-Net-T0" if a == "unet_t0" else "ViT-T0"} (Spearman ρ = {r:.2f})')
 ax.set_xscale('log')
 ax.set_xticks([0.1, 1, 10, 100], ['0.1', '1', '10', '100'])
-ax.set_xlabel('Labelled flooded share of the scored cells of the basin (%)')
+ax.set_xlabel('Labelled flooded share of the mapped area of the basin (%)')
 ax.set_ylabel('IoU of the basin')
 ax.set_ylim(bottom=-0.02)
 rc.ygrid(ax)

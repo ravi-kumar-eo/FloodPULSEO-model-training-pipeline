@@ -11,8 +11,9 @@ the product code, AOI name, product type and mapping date (Ravi, 15 Oct 2026: ne
 prediction: flood detected (labelled flood, predicted), missed detection (labelled flood, not predicted), false
 detection (labelled dry, predicted), dry (labelled dry, not predicted), permanent water or mixed (excluded from scoring);
 Ravi, 19 Oct 2026: "false detection" and "missed detection" replace "false alarm" and "flood missed".
-Under every map (draw_product): the labelled flooded area and its share of the scored cells, and for every prediction
-the evaluation metrics IoU (intersection over union), POD (probability of detection, the detected share of the labelled
+Under every map (draw_product): the labelled flooded area and its share of the mapped area (the cells labelled flood
+or dry; Ravi, 29 Oct 2026: never "scored" or "evaluated" in a figure, 'mapped area'), and for every prediction the predicted flooded area and share
+(Ravi, 29 Oct 2026) and the evaluation metrics IoU (intersection over union), POD (probability of detection, the detected share of the labelled
 flood) and POFD (probability of false detection, the share of the dry cells of the label predicted as flood) on the
 product's scored cells (Ravi, 17 and 19 Oct 2026: IoU, POD and POFD only).
 """
@@ -40,7 +41,7 @@ LEGEND = (('tp', 'Flood, detected'), ('fn', 'Missed detection'), ('fp', 'False d
 LEGEND_GROUPS = ((None, 'Flood label'), ('tp', 'Flood'), ('dry', 'Dry'),
                  (None, 'Prediction'), ('tp', 'Flood, detected'), ('fn', 'Missed detection'), ('fp', 'False detection'),
                  ('dry', 'Dry, not predicted'),
-                 (None, 'All maps'), ('pw', 'Permanent water or mixed,\nnot scored'), ('out', 'Outside the mapped area'))
+                 (None, 'All maps'), ('pw', 'Permanent water or mixed,\nnot mapped'), ('out', 'Outside the mapped area'))
 KIND = {'DEL': 'delineation', 'DELINEATION': 'delineation', 'GRA': 'grading', 'GRADING': 'grading',
         'FEP': 'first estimate'}
 MONTHS = ('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
@@ -244,18 +245,30 @@ def measures(product, key):
     return dict(iou=tp / max(tp + fp + fn, 1), pod=tp / max(tp + fn, 1), pofd=fp / max(c['dry'], 1))
 
 
+def area_share(cells, evaluated):
+    """Area in km² of a number of 80 m cells and its share (%) of the evaluated cells (labelled flood or dry)."""
+    a, s = cells * 0.0064, 100 * cells / max(evaluated, 1)
+    return (f'{a:.1f}' if a < 10 else f'{a:,.0f}'), (f'{s:.2g}' if 0 < s < 0.1 else f'{s:.1f}')
+
+
 def label_text(product):
     _, lab, _, _ = data()
     rr, _, _ = layout(product)
     y = lab[rr]
-    flood, scored = int((y == 1).sum()), int((y >= 0).sum())
-    return f'Flooded area {flood * 0.0064:,.0f} km²\n{100 * flood / scored:.1f}% of the scored cells'
+    a, s = area_share(int((y == 1).sum()), int((y >= 0).sum()))
+    return f'Flooded area {a} km²\n{s}% of the mapped area'
+
+
+def predicted_text(cells, evaluated):
+    a, s = area_share(cells, evaluated)
+    return f'Predicted flood {a} km², {s}%'
 
 
 def prediction_label(product, key, two_lines=False):
-    m = measures(product, key)
+    m, c = measures(product, key), scores(product, key)
     sep = '\n' if two_lines else '   '
-    return f"IoU {m['iou']:.2f}   POD {m['pod']:.2f}{sep}POFD {m['pofd']:.3f}"
+    return predicted_text(c['predicted'], c['flood'] + c['dry']) + \
+        f"\nIoU {m['iou']:.2f}   POD {m['pod']:.2f}{sep}POFD {m['pofd']:.3f}"
 
 
 def column_legend(fig, y=0.0):
@@ -299,7 +312,8 @@ def draw_product(product, keys, titles, script_file, subdir=None, width=None, ma
     titles = [label_title(product) if k is None else t for k, t in zip(keys, titles)]
     ratio = imgs[0].shape[0] / imgs[0].shape[1]
     width = width or ps.TEXT_WIDTH_IN
-    label_h, gap_w = 0.42, 0.12
+    gap_w = 0.12
+    text_h = {1: 0.42, 2: 0.42, 3: 0.58}                 # three columns: the metrics take two lines (narrow panels)
     title_h = 0.06 + 0.17 * max(t.count('\n') + 1 for t in titles)
     best = None
     for ncol in (1, 2, 3):                              # one column suits wide, thin areas
@@ -312,11 +326,12 @@ def draw_product(product, keys, titles, script_file, subdir=None, width=None, ma
         nrow = -(-len(slots) // ncol)
         extra = 0.5 if 'legend' not in slots else 0.1
         pw = (width - gap_w * (ncol - 1) - 0.1) / ncol
-        pw = min(pw, (max_height - extra - nrow * (label_h + title_h)) / (nrow * ratio))   # fit the page height
-        h = nrow * (pw * ratio + label_h + title_h) + extra
+        pw = min(pw, (max_height - extra - nrow * (text_h[ncol] + title_h)) / (nrow * ratio))   # fit the page height
+        h = nrow * (pw * ratio + text_h[ncol] + title_h) + extra
         if best is None or pw > best[0]:
             best = (pw, ncol, nrow, slots, h)
     pw, ncol, nrow, slots, _ = best
+    label_h = text_h[ncol]
     # title height of each row from the titles in it (the three-line flood-label title only in its own row)
     row_t = [0.06 + 0.17 * max([titles[s].count('\n') + 1 for s in slots[r * ncol:(r + 1) * ncol] if s != 'legend']
                                or [1]) for r in range(nrow)]
@@ -343,7 +358,7 @@ def draw_product(product, keys, titles, script_file, subdir=None, width=None, ma
         for sp in ax.spines.values():
             sp.set_visible(True); sp.set_edgecolor('black'); sp.set_linewidth(0.6)
         ax.set_title(titles[slot], fontsize=ps.FONT_SIZE + 0.5, pad=4)
-        text = label_text(product) if keys[slot] is None else prediction_label(product, keys[slot])
+        text = label_text(product) if keys[slot] is None else prediction_label(product, keys[slot], two_lines=ncol == 3)
         ax.text(0.5, -0.03, text, transform=ax.transAxes, ha='center', va='top', fontsize=ps.FONT_SIZE - 0.5,
                 linespacing=1.3)
     if 'legend' not in slots:
@@ -376,7 +391,7 @@ def draw_rows(products, keys, titles, script_file, subdir=None, width=None, max_
     imgs = [[mosaic(p, k) for k in keys] for p in products]
     ratios = [im[0].shape[0] / im[0].shape[1] for im in imgs]
     ncol, gap_w = len(keys), 0.12
-    label_h = 0.58 if ncol > 2 else 0.42                # two lines of text under the maps
+    label_h = 0.64 if ncol > 2 else 0.50                # predicted flood and metrics under the maps (three or two lines)
     row_t = []
     for i, p in enumerate(products):
         t = [wrap_title(label_title(p)) if k is None else tt for k, tt in zip(keys, titles)]

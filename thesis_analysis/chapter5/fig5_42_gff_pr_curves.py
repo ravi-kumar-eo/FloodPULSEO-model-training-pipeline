@@ -64,7 +64,7 @@ def main():
     hl = [Line2D([], [], color=bc.colour(g), lw=1.4, marker=bc.marker(g), ms=5.5,
                  mfc=ps.alpha_on_white(bc.colour(g), 0.75), mec='black', mew=0.6, label=bc.LABEL[g])
           for g in list(bc.GFF_MODELS) + list(OURS)]
-    hl.append(Line2D([], [], color='black', lw=0.6, ls=(0, (1, 1.5)), label='Flooded share of the scored cells'))
+    hl.append(Line2D([], [], color='black', lw=0.6, ls=(0, (1, 1.5)), label='Flooded share of the mapped area'))
     fig.legend(handles=hl, loc='lower center', bbox_to_anchor=(0.5, 0.0), ncol=3, frameon=False,
                fontsize=ps.FONT_SIZE - 1.5, handlelength=2.0, columnspacing=1.4)
     fig.tight_layout(rect=(0, 0.17, 1, 1), w_pad=1.2)
